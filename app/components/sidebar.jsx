@@ -67,7 +67,7 @@ const menuGroups = [
     items: [
       { label: "Reports & Flagged", href: "/reports", icon: Flag },
       { label: "User Support", href: "/user-support", icon: Headset },
-      { label: "Audit Logs", href: "/audit-logs", icon: ClipboardCheck },
+      { label: "Audit Logs", href: "/auditlogs", icon: ClipboardCheck },
     ],
   },
   {
