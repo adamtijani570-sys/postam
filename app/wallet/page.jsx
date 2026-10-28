@@ -227,25 +227,58 @@ export default function Wallet() {
               <div className="flex items-end gap-4">
                 
                 {/* Naira Rate Box */}
-                <div className="flex-1">
-                  <label className="mb-1.5 block text-xs font-medium text-[#85899a]">Base Rate (Naira)</label>
-                  <div className="flex items-center rounded-lg border border-[#e7e7ef] bg-[#f8f9fa] p-1">
-                    <input type="text" defaultValue="100 coins" className="w-full bg-transparent px-3 py-1.5 text-sm text-[#24283b] outline-none" readOnly />
-                    <span className="flex items-center px-3 text-sm text-[#85899a]">=</span>
-                    <input type="text" defaultValue="₦1" className="w-full bg-transparent px-3 py-1.5 text-sm text-[#24283b] outline-none" readOnly />
-                  </div>
-                </div>
+                  <div className="flex-1">
+                    <label className="mb-1.5 block text-xs font-medium text-[#85899a]">
+                      Base Rate (Naira)
+                    </label>
 
-                {/* Dollar Rate Box */}
-                <div className="flex-1">
-                  <label className="mb-1.5 block text-xs font-medium text-[#85899a]">Base Rate (Dollar)</label>
-                  <div className="flex items-center rounded-lg border border-[#e7e7ef] bg-[#f8f9fa] p-1">
-                    <input type="text" defaultValue="150 coins" className="w-full bg-transparent px-3 py-1.5 text-sm text-[#24283b] outline-none" readOnly />
-                    <span className="flex items-center px-3 text-sm text-[#85899a]">=</span>
-                    <input type="text" defaultValue="$1.20" className="w-full bg-transparent px-3 py-1.5 text-sm text-[#24283b] outline-none" readOnly />
-                  </div>
-                </div>
+                    <div className="flex items-center rounded-lg border border-[#e7e7ef] bg-[#f8f9fa] p-1">
+                      <input
+                        type="number"
+                        defaultValue={0}
+                        min="100"
+                        className="w-full bg-transparent px-3 py-1.5 text-sm text-[#24283b] outline-none"
+                      />
 
+                      <span className="flex items-center px-3 text-sm text-[#85899a]">
+                        =
+                      </span>
+
+                      <input
+                        type="text"
+                        value="₦1"
+                        readOnly
+                        className="w-full cursor-not-allowed bg-transparent px-3 py-1.5 text-sm text-[#85899a] outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Dollar Rate Box */}
+                  <div className="flex-1">
+                    <label className="mb-1.5 block text-xs font-medium text-[#85899a]">
+                      Base Rate (Dollar)
+                    </label>
+
+                    <div className="flex items-center rounded-lg border border-[#e7e7ef] bg-[#f8f9fa] p-1">
+                      <input
+                        type="number"
+                        defaultValue={0}
+                        min="1"
+                        className="w-full bg-transparent px-3 py-1.5 text-sm text-[#24283b] outline-none"
+                      />
+
+                      <span className="flex items-center px-3 text-sm text-[#85899a]">
+                        =
+                      </span>
+
+                      <input
+                        type="text"
+                        value="$1.20"
+                        readOnly
+                        className="w-full cursor-not-allowed bg-transparent px-3 py-1.5 text-sm text-[#85899a] outline-none"
+                      />
+                    </div>
+                  </div>
                 <button 
                   onClick={() => setActiveModal("updateRates")}
                   className="rounded-lg bg-[#7555ff] px-6 py-2.5 text-sm font-medium text-white hover:bg-[#6344e6] transition-colors"
