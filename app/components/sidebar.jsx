@@ -22,6 +22,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+import { useAuthStore } from "../src/store/authStore";
+
 const menuGroups = [
   {
     title: null,
@@ -50,7 +52,9 @@ const menuGroups = [
   },
   {
     title: "PLATFORM SETTINGS",
-    items: [{ label: "App Configuration", href: "/app-configuration", icon: Settings }],
+    items: [
+      { label: "App Configuration", href: "/app-configuration", icon: Settings },
+    ],
   },
   {
     title: "INSIGHTS & ANALYTICS",
@@ -60,7 +64,9 @@ const menuGroups = [
   },
   {
     title: "ADS",
-    items: [{ label: "Ad Management", href: "/ad-management", icon: Megaphone }],
+    items: [
+      { label: "Ad Management", href: "/ad-management", icon: Megaphone },
+    ],
   },
   {
     title: "SECURITY & SUPPORT",
@@ -72,16 +78,27 @@ const menuGroups = [
   },
   {
     title: "TEAM & PERMISSIONS",
-    items: [{ label: "Admin Roles", href: "/admin-roles", icon: Shield }],
+    items: [
+      { label: "Admin Roles", href: "/admin-roles", icon: Shield },
+    ],
   },
   {
     title: "DEVELOPER TOOLS",
-    items: [{ label: "API & Integrations", href: "/api-integrations", icon: CodeXml }],
+    items: [
+      { label: "API & Integrations", href: "/api-integrations", icon: CodeXml },
+    ],
   },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+
+  const user = useAuthStore((state) => state.user);
+
+  const email = user?.email || "";
+  const displayName =
+    user?.name || email.split("@")[0] || "Admin User";
+  const avatarLetter = displayName.charAt(0).toUpperCase();
 
   const isActive = (href) =>
     pathname === href || pathname.startsWith(`${href}/`);
@@ -148,15 +165,16 @@ export default function Sidebar() {
           aria-label="Admin account"
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#e7e7ef] bg-[#f4edff] text-sm font-semibold text-[#7555ff]">
-            A
+            {avatarLetter}
           </div>
 
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-[#24283b]">
-              Admin User
+              {displayName}
             </p>
+
             <p className="truncate text-xs text-[#85899a]">
-              admin@postam.com
+              {email || "No email available"}
             </p>
           </div>
 

@@ -1,472 +1,165 @@
 
 "use client";
 
-import React, { useState } from "react";
-import Sidebar from "../app/components/sidebar";
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, ArrowRight } from "lucide-react";
+import { useAuthStore } from "./src/store/authStore";
 
-import {
-  Users,
-  FileText,
-  DollarSign,
-  Video,
-  ThumbsUp,
-  Share2,
-  TrendingUp,
-  TrendingDown,
-} from "lucide-react";
+export default function AdminLoginPage() {
+  const router = useRouter();
+  const login = useAuthStore((state) => state.login);
 
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-const stats = [
-  {
-    title: "Daily Active Users",
-    value: "24,853",
-    change: "12%",
-    positive: false,
-    icon: Users,
-  },
-  {
-    title: "Monthly Active Users",
-    value: "187,234",
-    change: "8.3%",
-    positive: true,
-    icon: Users,
-  },
-  {
-    title: "Total Posts",
-    value: "425,873",
-    change: "5.3%",
-    positive: true,
-    icon: FileText,
-  },
-  {
-    title: "Payout Volume",
-    value: "$2.4M",
-    change: "8.8%",
-    positive: true,
-    icon: DollarSign,
-  },
-  {
-    title: "Posts Today",
-    value: "4,832",
-    icon: FileText,
-  },
-  {
-    title: "Video Views",
-    value: "892.3K",
-    icon: Video,
-  },
-  {
-    title: "Total Likes",
-    value: "156.2K",
-    icon: ThumbsUp,
-  },
-  {
-    title: "Shares",
-    value: "28.4K",
-    icon: Share2,
-  },
-];
+  function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
 
-const engagementData = [
-  { date: "1 Oct", images: 1700, text: 200 },
-  { date: "3 Oct", images: 2600, text: 1200 },
-  { date: "7 Oct", images: 1900, text: 1500 },
-  { date: "10 Oct", images: 2700, text: 700 },
-  { date: "14 Oct", images: 3800, text: 2800 },
-  { date: "20 Oct", images: 1500, text: 3700 },
-  { date: "23 Oct", images: 600, text: 2800 },
-  { date: "27 Oct", images: 1800, text: 3500 },
-  { date: "30 Oct", images: 3700, text: 2000 },
-];
+    const success = login(email, password);
 
-const payoutData = [
-  { day: "MON", amount: 35 },
-  { day: "TUE", amount: 15 },
-  { day: "WED", amount: 37 },
-  { day: "THU", amount: 21 },
-  { day: "FRI", amount: 68 },
-  { day: "SAT", amount: 12 },
-  { day: "SUN", amount: 32 },
-];
-
-const contentData = [
-  { name: "Images", value: 24, color: "#9333ff" },
-  { name: "Text Posts", value: 26, color: "#d6b9ff" },
-  { name: "Videos", value: 39, color: "#c5d2ff" },
-  { name: "Livestreams", value: 11, color: "#4c45ff" },
-];
-
-function Panel({ children, className = "" }) {
-  return (
-    <section
-      className={`min-w-0 rounded-xl border border-gray-200 bg-white p-3 sm:p-4 ${className}`}
-    >
-      {children}
-    </section>
-  );
-}
-
-function PanelTitle({ children, right }) {
-  return (
-    <div className="mb-4 flex items-center justify-between gap-2">
-      <h2 className="text-[12px] font-semibold text-gray-800 sm:text-sm">
-        {children}
-      </h2>
-
-      {right}
-    </div>
-  );
-}
-
-export default function DashboardPage() {
-  const [period, setPeriod] = useState("Month");
-  const [payoutPeriod, setPayoutPeriod] = useState("Last Week");
+    if (success) {
+      router.push("/dashboard");
+    } else {
+      setError("Please enter a valid email and password.");
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-[#f7f8fa]">
-      {/* Sidebar */}
-      <Sidebar />
+    <main className="relative min-h-screen overflow-hidden bg-[#09000f] text-white">
+      <Image
+        src="/gradient.png"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+      />
 
-      {/* Dashboard content */}
-      <main className="min-h-screen bg-[#f7f8fa] px-3 py-5 text-gray-900 sm:px-5 sm:py-7 lg:ml-[280px] lg:px-8">
-        <div className="mx-auto max-w-[1400px]">
-          {/* Dashboard heading */}
-          <header className="mb-5">
-            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-              Dashboard Overview
-            </h1>
+      <div className="absolute inset-0 bg-black/15" />
 
-            <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-              Manage all users, view profiles, and take administrative actions.
-            </p>
-          </header>
+      <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-5 sm:px-10">
+        <Link
+          href="/"
+          className="flex items-baseline gap-1 text-white no-underline"
+        >
+          <span className="text-2xl font-extrabold tracking-[-1.5px]">
+            postam
+          </span>
+          <span className="text-[10px]">admin</span>
+        </Link>
 
-          {/* Statistics cards */}
-          <div className="mb-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
-            {stats.map((stat) => {
-              const Icon = stat.icon;
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-xs text-white no-underline transition hover:text-violet-300 sm:text-sm"
+        >
+          Back to Homepage
+          <ArrowRight size={16} />
+          <span className="text-lg font-bold text-indigo-400">P</span>
+        </Link>
+      </header>
 
-              return (
-                <div
-                  key={stat.title}
-                  className="min-w-0 rounded-xl border border-gray-200 bg-white p-3 transition-shadow hover:shadow-sm sm:p-4"
-                >
-                  <div className="mb-2 flex items-center justify-between gap-1">
-                    <div className="flex min-w-0 items-center gap-2">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-gray-100 bg-gray-50">
-                        <Icon size={16} className="text-violet-500" />
-                      </span>
+      <section className="relative z-[1] flex min-h-screen flex-col items-center px-5 pb-12 pt-32 sm:pt-36 md:pt-40">
+        <h1 className="mb-6 bg-gradient-to-r from-[#d06cff] to-[#467bff] bg-clip-text text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
+          Welcome Back
+        </h1>
 
-                      <span className="truncate text-[10px] text-gray-500 sm:text-xs">
-                        {stat.title}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center justify-between gap-1">
-                    <p className="text-base font-bold tracking-tight sm:text-xl">
-                      {stat.value}
-                    </p>
-
-                    {stat.change && (
-                      <span
-                        className={`flex items-center gap-0.5 text-[10px] font-medium ${
-                          stat.positive
-                            ? "text-emerald-500"
-                            : "text-red-500"
-                        }`}
-                      >
-                        {stat.positive ? (
-                          <TrendingUp size={12} />
-                        ) : (
-                          <TrendingDown size={12} />
-                        )}
-
-                        {stat.positive ? "+" : "-"}
-                        {stat.change}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Engagement chart */}
-          <Panel className="mb-4">
-            <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
-              <PanelTitle>Engagement Trends</PanelTitle>
-
-              <div className="flex flex-wrap items-center gap-3 text-[10px] text-gray-500">
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-violet-600" />
-                  Images
-                </span>
-
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-purple-300" />
-                  Text Posts
-                </span>
-
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-blue-400" />
-                  Videos
-                </span>
-
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-pink-400" />
-                  Livestreams
-                </span>
-              </div>
-
-              <div className="flex w-fit rounded-md border border-gray-100 bg-gray-50 p-0.5">
-                {["Day", "Week", "Month", "Year"].map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => setPeriod(item)}
-                    className={`rounded px-2 py-1 text-[10px] transition ${
-                      period === item
-                        ? "bg-white font-semibold text-gray-900 shadow-sm"
-                        : "text-gray-500 hover:text-gray-900"
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-3 h-[230px] w-full sm:h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={engagementData}
-                  margin={{ top: 15, right: 5, left: -20, bottom: 0 }}
-                >
-                  <CartesianGrid
-                    stroke="#edf0f5"
-                    strokeDasharray="3 4"
-                    vertical={false}
-                  />
-
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 10, fill: "#8585a0" }}
-                    axisLine={false}
-                    tickLine={false}
-                    dy={8}
-                  />
-
-                  <YAxis
-                    domain={[0, 4000]}
-                    ticks={[0, 1000, 2000, 3000, 4000]}
-                    tickFormatter={(value) =>
-                      value === 0 ? "0" : `${value / 1000}k`
-                    }
-                    tick={{ fontSize: 10, fill: "#8585a0" }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: 10,
-                      border: "1px solid #eee",
-                      fontSize: 12,
-                    }}
-                  />
-
-                  <Line
-                    type="linear"
-                    dataKey="images"
-                    stroke="#5546ff"
-                    strokeWidth={1.5}
-                    dot={{
-                      r: 3,
-                      fill: "#fff",
-                      stroke: "#5546ff",
-                      strokeWidth: 1.5,
-                    }}
-                    activeDot={{ r: 5 }}
-                    name="Images"
-                  />
-
-                  <Line
-                    type="linear"
-                    dataKey="text"
-                    stroke="#d49aff"
-                    strokeWidth={1.5}
-                    dot={{
-                      r: 3,
-                      fill: "#fff",
-                      stroke: "#d49aff",
-                      strokeWidth: 1.5,
-                    }}
-                    activeDot={{ r: 5 }}
-                    name="Text Posts"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </Panel>
-
-          {/* Bottom charts */}
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {/* Payout chart */}
-            <Panel>
-              <PanelTitle
-                right={
-                  <select
-                    value={payoutPeriod}
-                    onChange={(event) =>
-                      setPayoutPeriod(event.target.value)
-                    }
-                    className="max-w-[125px] rounded-md border border-gray-200 bg-white px-2 py-1.5 text-[10px] text-gray-600 outline-none focus:border-violet-400"
-                  >
-                    <option>Last Week</option>
-                    <option>This Week</option>
-                    <option>Last Month</option>
-                  </select>
-                }
+        <div className="w-full max-w-[440px] rounded-xl bg-white px-7 pb-8 pt-8 text-[#77748a] shadow-[0_20px_70px_rgba(0,0,0,0.3)] sm:px-10 sm:pb-10 sm:pt-9">
+          <form onSubmit={handleSubmit} className="w-full">
+            <div className="mb-6 flex flex-col gap-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-[#716e82]"
               >
-                Payout Trends
-              </PanelTitle>
+                Email Address*
+              </label>
 
-              <div className="h-[200px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={payoutData}
-                    margin={{ top: 8, right: 0, left: -20, bottom: 0 }}
-                  >
-                    <CartesianGrid
-                      stroke="#edf0f5"
-                      strokeDasharray="3 4"
-                      vertical={false}
-                    />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="user@email.com"
+                autoComplete="username"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-12 w-full rounded-lg border border-[#c6b8ff] bg-white px-4 text-sm text-[#29233c] outline-none transition placeholder:text-[#aaa4bd] focus:border-[#7850e8] focus:ring-4 focus:ring-violet-100"
+              />
+            </div>
 
-                    <XAxis
-                      dataKey="day"
-                      tick={{ fontSize: 10, fill: "#8585a0" }}
-                      axisLine={false}
-                      tickLine={false}
-                      dy={8}
-                    />
+            <div className="mb-5 flex flex-col gap-2">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-[#716e82]"
+              >
+                Password
+              </label>
 
-                    <YAxis
-                      domain={[0, 80]}
-                      ticks={[0, 20, 40, 60, 80]}
-                      tickFormatter={(value) =>
-                        value === 0 ? "0" : `${value}k`
-                      }
-                      tick={{ fontSize: 10, fill: "#8585a0" }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
+              <div className="relative w-full">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="h-12 w-full rounded-lg border border-[#c6b8ff] bg-white px-4 pr-12 text-sm text-[#29233c] outline-none transition placeholder:text-[#aaa4bd] focus:border-[#7850e8] focus:ring-4 focus:ring-violet-100"
+                />
 
-                    <Tooltip
-                      formatter={(value) => [`$${value}k`, "Payout"]}
-                      contentStyle={{
-                        borderRadius: 10,
-                        border: "1px solid #eee",
-                        fontSize: 12,
-                      }}
-                    />
-
-                    <Bar
-                      dataKey="amount"
-                      name="Payout"
-                      radius={[4, 4, 0, 0]}
-                      barSize={16}
-                    >
-                      {payoutData.map((item) => (
-                        <Cell
-                          key={item.day}
-                          fill={
-                            item.day === "FRI" ? "#922cff" : "#eee2ff"
-                          }
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a18aff] transition hover:text-[#5d32d4]"
+                >
+                  {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+                </button>
               </div>
-            </Panel>
+            </div>
 
-            {/* Content distribution */}
-            <Panel>
-              <PanelTitle>Content Distribution</PanelTitle>
+            <div className="mb-7 flex flex-wrap items-center justify-between gap-3">
+              <label className="flex cursor-pointer items-center gap-2 text-xs text-[#8b879c] sm:text-sm">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 cursor-pointer accent-[#6844dc]"
+                />
+                Remember me
+              </label>
 
-              <div className="relative h-[200px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={contentData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius="54%"
-                      outerRadius="79%"
-                      paddingAngle={3}
-                      stroke="none"
-                      cornerRadius={7}
-                      label={({ value }) => `${value}%`}
-                      labelLine={false}
-                    >
-                      {contentData.map((item) => (
-                        <Cell key={item.name} fill={item.color} />
-                      ))}
-                    </Pie>
+              <Link
+                href="/admin/forgot-password"
+                className="text-xs text-[#8b70ec] no-underline transition hover:text-[#5d32d4] sm:text-sm"
+              >
+                Forgot Password?
+              </Link>
+            </div>
 
-                    <Tooltip
-                      formatter={(value, name) => [`${value}%`, name]}
-                      contentStyle={{
-                        borderRadius: 10,
-                        border: "1px solid #eee",
-                        fontSize: 12,
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+            {error && (
+              <p role="alert" className="mb-4 text-sm text-red-600">
+                {error}
+              </p>
+            )}
 
-              <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[10px] text-gray-500">
-                {contentData.map((item) => (
-                  <span
-                    key={item.name}
-                    className="flex items-center gap-1"
-                  >
-                    <span
-                      className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: item.color }}
-                    />
-
-                    {item.name}
-                  </span>
-                ))}
-              </div>
-            </Panel>
-          </div>
-
-          <footer className="py-5 text-center text-[10px] text-gray-400">
-            Dashboard Analytics · All rights reserved
-          </footer>
+            <button
+              type="submit"
+              className="flex h-12 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#8060e9] to-[#531bc9] text-sm font-semibold text-white shadow-md shadow-violet-200/50 transition hover:brightness-110 active:scale-[0.99]"
+            >
+              Sign in
+              <ArrowRight size={18} />
+            </button>
+          </form>
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }

@@ -1,22 +1,30 @@
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export const useAuthStore = create((set) => ({
   user: null,
-  token: null,
   isAuthenticated: false,
 
-  login: (user, token) =>
-    set({
-      user,
-      token,
-      isAuthenticated: true,
-    }),
+  login: (email, password) => {
+    if (!email.trim() || !password.trim()) {
+      return false;
+    }
 
-  logout: () =>
+    set({
+      user: {
+        email: email.trim(),
+        name: email.trim().split("@")[0],
+      },
+      isAuthenticated: true,
+    });
+
+    return true;
+  },
+
+  logout: () => {
     set({
       user: null,
-      token: null,
       isAuthenticated: false,
-    }),
+    });
+  },
 }));
