@@ -10,24 +10,26 @@ import { useAuthStore } from "./src/store/authStore";
 
 export default function AdminLoginPage() {
   const router = useRouter();
+
   const login = useAuthStore((state) => state.login);
+  const loading = useAuthStore((state) => state.loading);
 
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
-  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
 
-    const success = login(email, password);
+    const result = await login(phoneNumber, password);
 
-    if (success) {
+    if (result.success) {
       router.push("/dashboard");
     } else {
-      setError("Please enter a valid email and password.");
+      setError(result.message);
     }
   }
 
@@ -52,6 +54,7 @@ export default function AdminLoginPage() {
           <span className="text-2xl font-extrabold tracking-[-1.5px]">
             postam
           </span>
+
           <span className="text-[10px]">admin</span>
         </Link>
 
@@ -71,28 +74,32 @@ export default function AdminLoginPage() {
         </h1>
 
         <div className="w-full max-w-[440px] rounded-xl bg-white px-7 pb-8 pt-8 text-[#77748a] shadow-[0_20px_70px_rgba(0,0,0,0.3)] sm:px-10 sm:pb-10 sm:pt-9">
+
           <form onSubmit={handleSubmit} className="w-full">
+
+            {/* Phone Number */}
             <div className="mb-6 flex flex-col gap-2">
               <label
-                htmlFor="email"
+                htmlFor="phoneNumber"
                 className="text-sm font-medium text-[#716e82]"
               >
-                Email Address*
+                Phone Number*
               </label>
 
               <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="user@email.com"
+                id="phoneNumber"
+                name="phoneNumber"
+                type="tel"
+                placeholder="Enter your phone number"
                 autoComplete="username"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 required
                 className="h-12 w-full rounded-lg border border-[#c6b8ff] bg-white px-4 text-sm text-[#29233c] outline-none transition placeholder:text-[#aaa4bd] focus:border-[#7850e8] focus:ring-4 focus:ring-violet-100"
               />
             </div>
 
+            {/* Password */}
             <div className="mb-5 flex flex-col gap-2">
               <label
                 htmlFor="password"
@@ -117,14 +124,21 @@ export default function AdminLoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={
+                    showPassword ? "Hide password" : "Show password"
+                  }
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a18aff] transition hover:text-[#5d32d4]"
                 >
-                  {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+                  {showPassword ? (
+                    <EyeOff size={19} />
+                  ) : (
+                    <Eye size={19} />
+                  )}
                 </button>
               </div>
             </div>
 
+            {/* Remember Me and Forgot Password */}
             <div className="mb-7 flex flex-wrap items-center justify-between gap-3">
               <label className="flex cursor-pointer items-center gap-2 text-xs text-[#8b879c] sm:text-sm">
                 <input
@@ -133,6 +147,7 @@ export default function AdminLoginPage() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="h-4 w-4 cursor-pointer accent-[#6844dc]"
                 />
+
                 Remember me
               </label>
 
@@ -144,19 +159,27 @@ export default function AdminLoginPage() {
               </Link>
             </div>
 
+            {/* Error Message */}
             {error && (
-              <p role="alert" className="mb-4 text-sm text-red-600">
+              <p
+                role="alert"
+                className="mb-4 text-sm text-red-600"
+              >
                 {error}
               </p>
             )}
 
+            {/* Submit Button */}
             <button
               type="submit"
-              className="flex h-12 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#8060e9] to-[#531bc9] text-sm font-semibold text-white shadow-md shadow-violet-200/50 transition hover:brightness-110 active:scale-[0.99]"
+              disabled={loading}
+              className="flex h-12 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#8060e9] to-[#531bc9] text-sm font-semibold text-white shadow-md shadow-violet-200/50 transition hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Sign in
-              <ArrowRight size={18} />
+              {loading ? "Signing in..." : "Sign in"}
+
+              {!loading && <ArrowRight size={18} />}
             </button>
+
           </form>
         </div>
       </section>
